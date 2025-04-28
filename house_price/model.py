@@ -23,8 +23,27 @@ df.drop(columns=missing_percentage[missing_percentage>40].index,inplace=True)
 catag_col=df.select_dtypes(include='object').columns
 numbe_col=df.select_dtypes(exclude='object').columns
 
+# for col in catag_col:
+#     print(col, df[col].nunique())
+
+# for col in numbe_col:
+#     print(col,df[col].nunique())
+
+
+df[catag_col] = df[catag_col].replace(['NA', 'None', 'Missing', '?'], np.nan)
+
+
 for col in catag_col:
-    print(col, df[col].nunique())
+    df[col] = df[col].fillna(df[col].mode()[0])
 
 for col in numbe_col:
-    print(col,df[col].nunique())
+    df[col] = df[col].fillna(df[col].median())
+# df = df.drop('Id', axis=1)
+
+# print(df.columns)
+
+for col in ['GrLivArea', 'SalePrice', 'LotFrontage', 'GarageArea']:
+    sns.boxplot(x=df[col])  
+    plt.title(col)  
+    plt.show()
+
